@@ -3,163 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referidos Aiestrategias</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="logo.png">
+    <title>Sistema Aiestrategias</title>
     <link rel="icon" href="logo.png">
-    <meta name="theme-color" content="#0055ff">
-
     <style>
-        body { 
-            background: #0f1117; 
-            color: white; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        /* Las páginas están ocultas por defecto */
-        .page { display: none; width: 100%; align-items: center; justify-content: center; flex-grow: 1; padding: 20px; box-sizing: border-box; }
-        /* Esta clase muestra la página activa */
-        .show { display: flex !important; }
-        
-        .card { 
-            background: #1a1d27; 
-            padding: 30px; 
-            border-radius: 25px; 
-            border: 1px solid #333; 
-            width: 100%; 
-            max-width: 350px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-        .logo-img { width: 100%; max-width: 200px; margin-bottom: 15px; }
-        
-        .field { text-align: left; margin-bottom: 15px; }
-        label { font-size: 11px; color: #0055ff; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px; letter-spacing: 1px; }
-        input, textarea { 
-            width: 100%; background: #0f1117; border: 1px solid #333; 
-            border-radius: 10px; padding: 12px; color: white; box-sizing: border-box;
-            font-size: 14px; outline: none;
-        }
-        
-        .btn { 
-            background: #0055ff; color: white; border: none; padding: 16px; 
-            border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px;
-            cursor: pointer; margin-top: 10px; transition: 0.3s;
-        }
-        .btn:active { transform: scale(0.98); background: #0044cc; }
-        .btn:disabled { background: #444; opacity: 0.7; }
-        
-        p { color: #888; font-size: 14px; margin: 5px 0; }
-        .back-btn { background: none; border: none; color: #555; cursor: pointer; margin-bottom: 15px; font-size: 14px; font-weight: bold; width: 100%; text-align: left;}
+        body { background: #0f1117; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .page { display: none; width: 100%; max-width: 360px; padding: 20px; box-sizing: border-box; }
+        .show { display: block; }
+        .card { background: #1a1d27; padding: 30px; border-radius: 25px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        .logo { max-width: 180px; margin-bottom: 20px; }
+        input, textarea { width: 100%; background: #0f1117; border: 1px solid #333; border-radius: 12px; padding: 14px; color: white; margin-bottom: 15px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border-color: #0055ff; }
+        label { display: block; text-align: left; font-size: 11px; color: #0055ff; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn { background: #0055ff; color: white; border: none; padding: 16px; border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { background: #444; cursor: not-allowed; }
+        .vendedor-tag { font-size: 12px; color: #10b981; margin-bottom: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="p-home" class="page show">
+    <div id="p-login" class="page">
         <div class="card">
-            <img src="logo.png" alt="Logo" class="logo-img">
-            <p>Sistema de Referidos</p>
-            <p style="font-weight: bold; color: #aaa;">Comercializadora Aiestrategias</p>
-            <button class="btn" onclick="showPage('p-form')">INGRESAR</button>
+            <img src="logo.png" class="logo" alt="Aiestrategias">
+            <p style="color: #888; margin-bottom: 20px;">Acceso Privado</p>
+            <input type="text" id="user" placeholder="Usuario">
+            <input type="password" id="pass" placeholder="Contraseña">
+            <button class="btn" id="btnLogin" onclick="login()">INGRESAR</button>
         </div>
     </div>
 
     <div id="p-form" class="page">
         <div class="card">
-            <button class="back-btn" onclick="showPage('p-home')">← VOLVER</button>
-            <h2 style="margin-bottom: 20px; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">Nuevo Referido</h2>
+            <div id="vendedor-nombre" class="vendedor-tag"></div>
+            <h2 style="margin: 0 0 20px 0; font-size: 20px;">Nuevo Referido</h2>
             
-            <div class="field">
-                <label>Nombre del Cliente</label>
-                <input type="text" id="nombre" placeholder="Nombre completo">
-            </div>
+            <label>Nombre del Cliente</label>
+            <input type="text" id="f-nom" placeholder="Ej: Juan Pérez">
             
-            <div class="field">
-                <label>Teléfono / WhatsApp</label>
-                <input type="tel" id="telefono" placeholder="Ej: 3512345678">
-            </div>
+            <label>Teléfono</label>
+            <input type="tel" id="f-tel" placeholder="Ej: 3512345678">
             
-            <div class="field">
-                <label>Barrio / Localidad</label>
-                <input type="text" id="barrio" placeholder="Ej: Nueva Córdoba">
-            </div>
+            <label>Barrio / Localidad</label>
+            <input type="text" id="f-bar" placeholder="Ej: Centro">
             
-            <div class="field">
-                <label>Observaciones</label>
-                <textarea id="observaciones" rows="3" placeholder="Detalles de la venta..."></textarea>
-            </div>
-
-            <button class="btn" id="btnEnviar" onclick="enviarDatos()">ENVIAR A PLANILLA</button>
+            <label>Observaciones</label>
+            <textarea id="f-obs" rows="3" placeholder="Plan solicitado..."></textarea>
+            
+            <button class="btn" id="btnEnviar" onclick="enviar()">GUARDAR EN PLANILLA</button>
+            <p onclick="logout()" style="margin-top: 20px; font-size: 12px; color: #555; cursor: pointer;">Cerrar Sesión</p>
         </div>
     </div>
 
     <script>
-        // Esta función hace que las páginas cambien
-        function showPage(id) {
-            // Oculta todas las páginas
-            document.querySelectorAll('.page').forEach(p => {
-                p.classList.remove('show');
-            });
-            // Muestra la que pediste
-            document.getElementById(id).classList.add('show');
-        }
+        // URL de tu script de Google Apps Script
+        const URL_API = "https://script.google.com/macros/s/AKfycbx2JGutCO42COjzUXZ_CW5Q2KlQ44Tb0w0k4L5bUit2N5I0GuD2Qu49HcJ8OL1oASKa0Q/exec"; 
 
-        async function enviarDatos() {
-            const URL_GOOGLE = "https://script.google.com/macros/s/AKfycbxUycZqCGysxEzGkEWt7MBLo9mtCw8aIe_9XBzhZdgt_ENkhpGJut5ugHNFaHx5fKD0vg/exec";
-
-            const nombre = document.getElementById('nombre').value;
-            const telefono = document.getElementById('telefono').value;
-            const barrio = document.getElementById('barrio').value;
-            const observaciones = document.getElementById('observaciones').value;
-
-            if (!nombre || !telefono) {
-                alert("Por favor, completa Nombre y Teléfono.");
-                return;
+        // Al iniciar la web, revisamos si ya hay una sesión guardada
+        window.onload = function() {
+            const v_guardado = localStorage.getItem("vendedor_nombre");
+            if (v_guardado) {
+                iniciarApp(v_guardado);
+            } else {
+                document.getElementById('p-login').classList.add('show');
             }
+        };
 
-            const btn = document.getElementById('btnEnviar');
+        async function login() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const btn = document.getElementById('btnLogin');
+
+            if (!u || !p) return alert("Completa todos los campos");
+
             btn.disabled = true;
-            btn.innerText = "Guardando...";
-
-            const datos = {
-                nombre: nombre,
-                telefono: telefono,
-                barrio: barrio,
-                observaciones: observaciones
-            };
+            btn.innerText = "Verificando...";
 
             try {
-                await fetch(URL_GOOGLE, {
+                const response = await fetch(URL_API, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    header: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
+                    body: JSON.stringify({ accion: "login", usuario: u, password: p })
                 });
-
-                alert("✅ ¡Referido guardado con éxito!");
                 
-                // Limpiar y volver al inicio
-                document.getElementById('nombre').value = "";
-                document.getElementById('telefono').value = "";
-                document.getElementById('barrio').value = "";
-                document.getElementById('observaciones').value = "";
-                showPage('p-home');
+                const res = await response.json();
 
-            } catch (error) {
-                alert("Hubo un problema al guardar los datos.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "ENVIAR A PLANILLA";
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
-</body>
-</html>
+                if (res.res === "ok") {
+                    localStorage.setItem("vendedor_nombre", res.nombre);
+                    iniciarApp(res.nombre);
+                } else {
+                    alert("Usuario o
