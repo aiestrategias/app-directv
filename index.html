@@ -4,139 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aiestrategias | DirecTV</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Reutilizamos los estilos Pro que ya tenías */
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{background:#0f1117;color:#e8eaf0;font-family:'DM Sans',sans-serif;min-height:100vh}
-        .page{display:none;min-height:100vh;padding:16px 16px 64px}.page.show{display:block}
-        .vcenter{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px}
-        .card{background:#1a1d27;border-radius:16px;border:1px solid rgba(255,255,255,.07);padding:20px}
-        .inp{width:100%;background:#0f1117;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;color:#e8eaf0;font-size:14px;margin-bottom:10px}
-        .btn{display:block;width:100%;background:#0055ff;color:#fff;border:none;border-radius:10px;padding:13px;font-weight:700;cursor:pointer;text-align:center}
-        .btn.purple{background:#8b5cf6}.btn.green{background:#10b981}.btn.outline-red{background:transparent;color:#ef4444;border:1px solid #ef4444}
-        .hl{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase}
-        .blue{color:#0055ff}.muted{color:rgba(255,255,255,.4);font-size:12px}
-        .sg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
-        .sc{background:#1a1d27;padding:15px;border-radius:14px;text-align:center;border:1px solid rgba(255,255,255,.07)}
-        .sv{font-size:28px;font-weight:900;font-family:'Barlow Condensed'}
-        .tabs{display:flex;gap:5px;margin-bottom:15px}.tb{flex:1;padding:10px;border-radius:8px;border:none;background:#1a1d27;color:gray;cursor:pointer}
-        .tb.on{background:#0055ff;color:white}
+        :root { --bg: #0f1117; --card: #1a1d27; --blue: #0055ff; --green: #10b981; --purple: #8b5cf6; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: #e8eaf0; font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+        
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .show { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .vcenter { display: flex; align-items: center; justify-content: center; min-height: 90vh; }
+        .card { background: var(--card); border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .hl { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .blue { color: var(--blue); } .green { color: var(--green); } .purple { color: var(--purple); }
+        
+        .inp { width: 100%; background: #0b0d12; border: 1px solid #333; border-radius: 12px; padding: 14px; color: white; font-size: 15px; margin-bottom: 12px; transition: 0.3s; }
+        .inp:focus { border-color: var(--blue); outline: none; }
+        
+        .btn { display: block; width: 100%; border: none; border-radius: 12px; padding: 15px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; text-transform: uppercase; color: white; }
+        .btn-blue { background: var(--blue); }
+        .btn-green { background: var(--green); }
+        .btn-purple { background: var(--purple); }
+        .btn-ghost { background: transparent; border: 1px solid #444; color: #888; }
+        .btn:active { transform: scale(0.98); opacity: 0.8; }
+        
+        .sg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .sc { background: var(--card); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #333; }
+        .sv { font-size: 32px; font-weight: 900; font-family: 'Barlow Condensed'; line-height: 1; }
+        .sl { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 5px; }
+
+        .item-ref { padding: 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        .muted { color: #666; font-size: 12px; }
+        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+        .bg-pend { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .bg-ok { background: rgba(16,185,129,0.1); color: #10b981; }
     </style>
 </head>
 <body>
 
-<div id="p-home" class="page show">
-    <div class="vcenter">
-        <div style="width:100%;max-width:350px;text-align:center">
-            <h1 class="hl" style="font-size:40px;margin-bottom:20px">DIREC<span class="blue">TV</span></h1>
-            <button class="btn" style="margin-bottom:10px" onclick="goAuth('ref')">👤 REFERENCIADOR</button>
-            <button class="btn green" style="margin-bottom:10px" onclick="goAuth('vend')">🧑‍💼 VENDEDOR</button>
-            <button class="btn purple" onclick="goAuth('sup')">👑 SUPERVISOR</button>
-        </div>
-    </div>
-</div>
-
-<div id="p-auth" class="page">
-    <div class="vcenter">
-        <div class="card" style="width:100%;max-width:350px">
-            <h2 class="hl" id="a-title" style="margin-bottom:15px">LOGIN</h2>
-            <input class="inp" id="a-email" placeholder="Usuario / Email">
-            <input class="inp" type="password" id="a-pass" placeholder="Contraseña">
-            <button class="btn" onclick="doAuth()">INGRESAR</button>
-            <p class="muted" style="margin-top:15px;cursor:pointer" onclick="show('p-home')">← Volver</p>
-        </div>
-    </div>
-</div>
-
-<div id="p-sup" class="page">
-    <div class="hl" style="font-size:24px;margin-bottom:10px">PANEL <span style="color:#8b5cf6">SUPERVISOR</span></div>
-    <div class="sg">
-        <div class="sc"><div class="sv blue" id="s-total">0</div><div class="muted">REFERIDOS</div></div>
-        <div class="sc"><div class="sv" style="color:#10b981" id="s-ventas">0</div><div class="muted">VENTAS</div></div>
-    </div>
-    <div class="card">
-        <h3 class="hl" style="font-size:18px;margin-bottom:10px">Lista de Control</h3>
-        <div id="s-list" style="font-size:13px">Cargando datos...</div>
-    </div>
-    <button class="btn outline-red" style="margin-top:20px" onclick="logout()">CERRAR SESIÓN</button>
-</div>
-
-<script>
-    // TUS CREDENCIALES CONFIGURADAS
-    const SURL = 'https://wxwmvnybdhlbbtkvlzuc.supabase.co'; 
-    const SKEY = 'sb_publishable_FZQN55Ytuy3sWkoL-fCx9A_JE191GqS';
-    
-    let db, CU = null, refs = [];
-
-    // Inicializar Supabase
-    window.onload = async () => {
-        db = supabase.createClient(SURL, SKEY);
-        const saved = localStorage.getItem('dtv_cu');
-        if(saved) {
-            CU = JSON.parse(saved);
-            await loadData();
-            show(CU.role === 'sup' ? 'p-sup' : 'p-home');
-        }
-    };
-
-    function show(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-        document.getElementById(id).classList.add('show');
-    }
-
-    function goAuth(role) {
-        CU = { role: role };
-        document.getElementById('a-title').innerText = "LOGIN " + role.toUpperCase();
-        show('p-auth');
-    }
-
-    async function doAuth() {
-        const user = document.getElementById('a-email').value;
-        const pass = document.getElementById('a-pass').value;
-
-        if(CU.role === 'sup') {
-            if(user === 'Multitex' && pass === 'ferfer2fer') {
-                CU = { name: 'Supervisor', role: 'sup' };
-                localStorage.setItem('dtv_cu', JSON.stringify(CU));
-                await loadData();
-                show('p-sup');
-            } else { alert("Clave incorrecta"); }
-        }
-        // Aquí puedes agregar la lógica para Vendedores y Referidores
-    }
-
-    async function loadData() {
-        const { data, error } = await db.from('dtv_referidos').select('*');
-        if(!error) {
-            refs = data;
-            renderSup();
-        }
-    }
-
-    function renderSup() {
-        document.getElementById('s-total').innerText = refs.length;
-        document.getElementById('s-ventas').innerText = refs.filter(r => r.estado === 'concretada').length;
-        
-        const list = document.getElementById('s-list');
-        if(refs.length === 0) {
-            list.innerHTML = "No hay referidos cargados aún.";
-            return;
-        }
-
-        list.innerHTML = refs.map(r => `
-            <div style="padding:10px; border-bottom:1px solid #333; display:flex; justify-content:space-between">
-                <span><b>${r.nombre}</b><br><small>${r.vendedor_id || 'Sin asignar'}</small></span>
-                <span style="color:${r.estado === 'concretada' ? '#10b981' : '#f59e0b'}">${r.estado.toUpperCase()}</span>
+    <div id="p-home" class="page show">
+        <div class="vcenter">
+            <div style="width:100%; max-width:360px; text-align:center;">
+                <h1 class="hl" style="font-size:45px; margin-bottom:30px;">DIREC<span class="blue">TV</span></h1>
+                <div style="display:grid; gap:12px;">
+                    <button class="btn btn-blue" onclick="prepareLogin('ref')">👤 Referenciador</button>
+                    <button class="btn btn-green" onclick="prepareLogin('vend')">🧑‍💼 Vendedor</button>
+                    <button class="btn btn-purple" onclick="prepareLogin('sup')">👑 Supervisor</button>
+                </div>
+                <p class="muted" style="margin-top:40px;">v5.0 · Aiestrategias</p>
             </div>
-        `).join('');
-    }
+        </div>
+    </div>
 
-    function logout() {
-        localStorage.clear();
-        location.reload();
-    }
-</script>
-</body>
-</html>
+    <div id="p-auth" class="page">
+        <div class="vcenter">
+            <div class="card" style="width:100%; max-width:360px;">
+                <h2 class="hl" id="a-title" style="margin-bottom:20px; font-size:24px;">ACCESO</h2>
+                <input class="inp" id="a-user" placeholder="Usuario / Email">
+                <input class="inp" type="password" id="a-pass
