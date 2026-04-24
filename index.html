@@ -20,8 +20,10 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        /* Las páginas están ocultas por defecto */
         .page { display: none; width: 100%; align-items: center; justify-content: center; flex-grow: 1; padding: 20px; box-sizing: border-box; }
-        .show { display: flex; }
+        /* Esta clase muestra la página activa */
+        .show { display: flex !important; }
         
         .card { 
             background: #1a1d27; 
@@ -42,7 +44,6 @@
             border-radius: 10px; padding: 12px; color: white; box-sizing: border-box;
             font-size: 14px; outline: none;
         }
-        input:focus { border-color: #0055ff; }
         
         .btn { 
             background: #0055ff; color: white; border: none; padding: 16px; 
@@ -53,7 +54,7 @@
         .btn:disabled { background: #444; opacity: 0.7; }
         
         p { color: #888; font-size: 14px; margin: 5px 0; }
-        .back-btn { background: none; border: none; color: #555; cursor: pointer; margin-bottom: 10px; font-size: 14px; font-weight: bold; }
+        .back-btn { background: none; border: none; color: #555; cursor: pointer; margin-bottom: 15px; font-size: 14px; font-weight: bold; width: 100%; text-align: left;}
     </style>
 </head>
 <body>
@@ -97,13 +98,17 @@
     </div>
 
     <script>
+        // Esta función hace que las páginas cambien
         function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+            // Oculta todas las páginas
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('show');
+            });
+            // Muestra la que pediste
             document.getElementById(id).classList.add('show');
         }
 
         async function enviarDatos() {
-            // URL generada desde Google Apps Script
             const URL_GOOGLE = "https://script.google.com/macros/s/AKfycbxUycZqCGysxEzGkEWt7MBLo9mtCw8aIe_9XBzhZdgt_ENkhpGJut5ugHNFaHx5fKD0vg/exec";
 
             const nombre = document.getElementById('nombre').value;
@@ -128,7 +133,6 @@
             };
 
             try {
-                // Envío de datos
                 await fetch(URL_GOOGLE, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -138,7 +142,7 @@
 
                 alert("✅ ¡Referido guardado con éxito!");
                 
-                // Limpiar campos y volver al inicio
+                // Limpiar y volver al inicio
                 document.getElementById('nombre').value = "";
                 document.getElementById('telefono').value = "";
                 document.getElementById('barrio').value = "";
@@ -146,7 +150,6 @@
                 showPage('p-home');
 
             } catch (error) {
-                console.error("Error:", error);
                 alert("Hubo un problema al guardar los datos.");
             } finally {
                 btn.disabled = false;
