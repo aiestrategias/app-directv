@@ -2,202 +2,117 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aiestrategias | DirecTV</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTV Sistema</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        :root { --bg: #0f1117; --card: #1a1d27; --blue: #0055ff; --green: #10b981; --purple: #8b5cf6; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #e8eaf0; font-family: 'DM Sans', sans-serif; min-height: 100vh; }
-        
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        body { background: #0f1117; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #1a1d27; padding: 20px; border-radius: 15px; max-width: 350px; margin: 20px auto; border: 1px solid #333; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; text-transform: uppercase; }
+        .btn-green { background: #10b981; }
+        .btn-purple { background: #8b5cf6; }
+        .btn-blue { background: #0055ff; }
+        .inp { width: 90%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; }
+        .page { display: none; }
         .show { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .vcenter { display: flex; align-items: center; justify-content: center; min-height: 90vh; }
-        .card { background: var(--card); border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        .hl { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        .blue { color: var(--blue); } .green { color: var(--green); } .purple { color: var(--purple); }
-        
-        .inp { width: 100%; background: #0b0d12; border: 1px solid #333; border-radius: 12px; padding: 14px; color: white; font-size: 15px; margin-bottom: 12px; transition: 0.3s; }
-        .inp:focus { border-color: var(--blue); outline: none; }
-        
-        .btn { display: block; width: 100%; border: none; border-radius: 12px; padding: 15px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; text-transform: uppercase; color: white; }
-        .btn-blue { background: var(--blue); }
-        .btn-green { background: var(--green); }
-        .btn-purple { background: var(--purple); }
-        .btn-ghost { background: transparent; border: 1px solid #444; color: #888; }
-        
-        .sg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .sc { background: var(--card); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #333; }
-        .sv { font-size: 32px; font-weight: 900; font-family: 'Barlow Condensed'; line-height: 1; }
-        .sl { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 5px; }
-
-        .item-ref { padding: 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
-        .muted { color: #666; font-size: 12px; }
-        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 700; background: rgba(245,158,11,0.1); color: #f59e0b; }
     </style>
 </head>
 <body>
 
     <div id="p-home" class="page show">
-        <div class="vcenter">
-            <div style="width:100%; max-width:360px; text-align:center;">
-                <h1 class="hl" style="font-size:45px; margin-bottom:30px;">DIREC<span class="blue">TV</span></h1>
-                <div style="display:grid; gap:12px;">
-                    <button class="btn btn-green" onclick="prepareLogin('vend')">🧑‍💼 Acceso Vendedor</button>
-                    <button class="btn btn-purple" onclick="prepareLogin('sup')">👑 Acceso Supervisor</button>
-                </div>
-                <p class="muted" style="margin-top:40px;">Sistema de Referidos v5.1</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="p-auth" class="page">
-        <div class="vcenter">
-            <div class="card" style="width:100%; max-width:360px;">
-                <h2 class="hl" id="a-title" style="margin-bottom:20px; font-size:24px;">ACCESO</h2>
-                <input class="inp" id="a-user" placeholder="Usuario">
-                <input class="inp" type="password" id="a-pass" placeholder="Contraseña">
-                <button class="btn btn-blue" id="btn-login" onclick="doAuth()">Entrar</button>
-                <button class="btn btn-ghost" style="margin-top:10px;" onclick="show('p-home')">Volver</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="p-vend" class="page">
-        <div class="hl" style="font-size:24px; margin-bottom:15px;"><span class="green">Carga</span> de Referido</div>
+        <h1>DIREC<span style="color:#0055ff">TV</span></h1>
+        <p style="color: gray; margin-bottom: 20px;">Seleccione su perfil</p>
         <div class="card">
-            <input class="inp" id="v-nom" placeholder="Nombre del cliente">
-            <input class="inp" id="v-tel" placeholder="WhatsApp (Ej: 11223344)">
-            <input class="inp" id="v-bar" placeholder="Barrio / Localidad">
-            <textarea class="inp" id="v-obs" rows="3" placeholder="Observaciones"></textarea>
-            <button class="btn btn-green" id="btn-save" onclick="saveReferido()">Guardar Cliente</button>
+            <button class="btn btn-green" onclick="irALogin('vendedor')">Acceso Vendedor</button>
+            <button class="btn btn-purple" onclick="irALogin('supervisor')">Acceso Supervisor</button>
         </div>
-        <button class="btn btn-ghost" style="margin-top:20px;" onclick="logout()">Cerrar Sesión</button>
     </div>
 
-    <div id="p-sup" class="page">
-        <div class="hl" style="font-size:24px; margin-bottom:15px;"><span class="purple">Panel</span> Supervisor</div>
-        <div class="sg">
-            <div class="sc"><div class="sv blue" id="s-total">0</div><div class="sl">Referidos</div></div>
-            <div class="sc"><div class="sv green" id="s-ventas">0</div><div class="sl">Ventas</div></div>
+    <div id="p-login" class="page">
+        <h2 id="login-title">LOGIN</h2>
+        <div class="card">
+            <input class="inp" id="u-user" placeholder="Usuario">
+            <input class="inp" type="password" id="u-pass" placeholder="Contraseña">
+            <button class="btn btn-blue" onclick="procesarLogin()">Entrar</button>
+            <button style="background:none; color:gray; border:none; cursor:pointer;" onclick="location.reload()">← Volver</button>
         </div>
-        <div class="card" style="padding:10px;">
-            <h3 class="hl" style="font-size:14px; padding:10px; border-bottom:1px solid #333;">Últimos Movimientos</h3>
-            <div id="s-list">Cargando datos...</div>
+    </div>
+
+    <div id="p-vendedor" class="page">
+        <h2>Panel Vendedor</h2>
+        <div class="card">
+            <input class="inp" id="c-nom" placeholder="Nombre Cliente">
+            <input class="inp" id="c-tel" placeholder="WhatsApp">
+            <button class="btn btn-green" onclick="guardarCliente()">Guardar Referido</button>
         </div>
-        <button class="btn btn-ghost" style="margin-top:20px;" onclick="logout()">Cerrar Sesión</button>
+        <button class="btn" style="background:#333;" onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <div id="p-supervisor" class="page">
+        <h2>Panel Supervisor</h2>
+        <div class="card" id="lista-referidos">
+            Cargando datos...
+        </div>
+        <button class="btn" style="background:#333;" onclick="logout()">Cerrar Sesión</button>
     </div>
 
     <script>
-        // CONFIGURACIÓN DE CONEXIÓN
         const SURL = 'https://wxwmvnybdhlbbtkvlzuc.supabase.co';
         const SKEY = 'sb_publishable_FZQN55Ytuy3sWkoL-fCx9A_JE191GqS';
-        
         const db = supabase.createClient(SURL, SKEY);
-        let CU = null; 
 
-        function show(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-            document.getElementById(id).classList.add('show');
+        let perfilSeleccionado = '';
+        let usuarioActual = '';
+
+        function irALogin(rol) {
+            perfilSeleccionado = rol;
+            document.getElementById('login-title').innerText = "LOGIN " + rol.toUpperCase();
+            document.getElementById('p-home').classList.remove('show');
+            document.getElementById('p-login').classList.add('show');
         }
 
-        function prepareLogin(role) {
-            CU = { role: role };
-            document.getElementById('a-title').innerText = "LOGIN " + role.toUpperCase();
-            show('p-auth');
-        }
+        async function procesarLogin() {
+            const u = document.getElementById('u-user').value;
+            const p = document.getElementById('u-pass').value;
 
-        async function doAuth() {
-            const user = document.getElementById('a-user').value.trim();
-            const pass = document.getElementById('a-pass').value;
-            const btn = document.getElementById('btn-login');
-
-            if(!user || !pass) return alert("Completá los campos");
-            btn.disabled = true; btn.innerText = "Verificando...";
-
-            if(CU.role === 'sup') {
-                if(user === 'Multitex' && pass === 'ferfer2fer') {
-                    successLogin({ name: 'Admin', role: 'sup' });
-                } else {
-                    alert("Clave incorrecta");
-                    btn.disabled = false; btn.innerText = "Entrar";
-                }
+            if (perfilSeleccionado === 'supervisor') {
+                if (u === 'Multitex' && p === 'ferfer2fer') {
+                    abrirPanel('supervisor');
+                } else { alert("Datos incorrectos"); }
             } else {
-                try {
-                    const { data, error } = await db.from('dtv_vendedores')
-                        .select('*').eq('usuario', user).eq('pass', pass).single();
-                    if(error || !data) alert("Usuario o Clave de Vendedor no coinciden");
-                    else successLogin({ name: data.nombre, role: 'vend' });
-                } catch(e) { alert("Error de conexión"); }
-                btn.disabled = false; btn.innerText = "Entrar";
+                const { data, error } = await db.from('dtv_vendedores').select('*').eq('usuario', u).eq('pass', p).single();
+                if (data) {
+                    usuarioActual = data.nombre;
+                    abrirPanel('vendedor');
+                } else { alert("Vendedor no encontrado"); }
             }
         }
 
-        function successLogin(userObj) {
-            CU = userObj;
-            localStorage.setItem('dtv_cu', JSON.stringify(CU));
-            if(CU.role === 'sup') { loadSupData(); show('p-sup'); }
-            else { show('p-vend'); }
+        function abrirPanel(p) {
+            document.querySelectorAll('.page').forEach(pag => pag.classList.remove('show'));
+            document.getElementById('p-' + p).classList.add('show');
+            if(p === 'supervisor') cargarDatosSup();
         }
 
-        async function saveReferido() {
-            const nom = document.getElementById('v-nom').value;
-            const tel = document.getElementById('v-tel').value;
-            const btn = document.getElementById('btn-save');
-            if(!nom || !tel) return alert("Nombre y Teléfono obligatorios");
-            
-            btn.disabled = true; btn.innerText = "Guardando...";
-            const { error } = await db.from('dtv_referidos').insert([{
-                nombre: nom,
-                telefono: tel,
-                barrio: document.getElementById('v-bar').value,
-                observaciones: document.getElementById('v-obs').value,
-                vendedor_id: CU.name,
-                estado: 'pendiente'
-            }]);
-
-            if(error) alert("Error: " + error.message);
-            else {
-                alert("✅ Guardado con éxito");
-                document.querySelectorAll('.inp').forEach(i => i.value = "");
-            }
-            btn.disabled = false; btn.innerText = "Guardar Cliente";
+        async function guardarCliente() {
+            const n = document.getElementById('c-nom').value;
+            const t = document.getElementById('c-tel').value;
+            const { error } = await db.from('dtv_referidos').insert([{ nombre: n, telefono: t, vendedor_id: usuarioActual }]);
+            if (error) alert("Error al guardar");
+            else { alert("¡Guardado!"); location.reload(); }
         }
 
-        async function loadSupData() {
-            const { data } = await db.from('dtv_referidos').select('*').order('created_at', { ascending: false });
-            if(data) {
-                document.getElementById('s-total').innerText = data.length;
-                document.getElementById('s-ventas').innerText = data.filter(r => r.estado === 'concretada').length;
-                document.getElementById('s-list').innerHTML = data.map(r => `
-                    <div class="item-ref">
-                        <div>
-                            <div style="font-weight:700">${r.nombre}</div>
-                            <div class="muted">Vendedor: ${r.vendedor_id || '---'}</div>
-                        </div>
-                        <span class="badge">${r.estado}</span>
-                    </div>
-                `).join('') || '<p style="padding:20px;color:gray">No hay datos</p>';
+        async function cargarDatosSup() {
+            const { data } = await db.from('dtv_referidos').select('*');
+            const lista = document.getElementById('lista-referidos');
+            if (data) {
+                lista.innerHTML = data.map(r => `<div style="border-bottom:1px solid #444; padding:10px; text-align:left;">
+                    <b>${r.nombre}</b><br><small>Vendedor: ${r.vendedor_id}</small>
+                </div>`).join('');
             }
         }
 
-        function logout() { localStorage.clear(); location.reload(); }
-
-        window.onload = () => {
-            const saved = localStorage.getItem('dtv_cu');
-            if(saved) {
-                CU = JSON.parse(saved);
-                if(CU.role === 'sup') { loadSupData(); show('p-sup'); }
-                else { show('p-vend'); }
-            }
-        };
+        function logout() { location.reload(); }
     </script>
 </body>
 </html>
