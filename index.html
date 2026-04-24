@@ -3,77 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Aiestrategias</title>
+    <title>Aiestrategias - Sistema Privado</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" href="logo.png">
+    <meta name="theme-color" content="#0055ff">
+
     <style>
-        body { background: #0f1117; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        body { 
+            background: #0f1117; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh;
+        }
+        
         .page { display: none; width: 100%; max-width: 360px; padding: 20px; box-sizing: border-box; }
-        .show { display: block; }
-        .card { background: #1a1d27; padding: 30px; border-radius: 25px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
-        .logo { max-width: 180px; margin-bottom: 20px; }
-        input, textarea { width: 100%; background: #0f1117; border: 1px solid #333; border-radius: 12px; padding: 14px; color: white; margin-bottom: 15px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .show { display: block !important; }
+        
+        .card { 
+            background: #1a1d27; 
+            padding: 30px; 
+            border-radius: 25px; 
+            border: 1px solid #333; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .logo-img { width: 100%; max-width: 180px; margin-bottom: 20px; }
+        
+        /* Inputs */
+        .field { text-align: left; margin-bottom: 15px; }
+        label { font-size: 11px; color: #0055ff; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px; letter-spacing: 1px; }
+        input, textarea { 
+            width: 100%; background: #0f1117; border: 1px solid #333; 
+            border-radius: 12px; padding: 14px; color: white; box-sizing: border-box;
+            font-size: 16px; outline: none; transition: 0.3s;
+        }
         input:focus { border-color: #0055ff; }
-        label { display: block; text-align: left; font-size: 11px; color: #0055ff; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn { background: #0055ff; color: white; border: none; padding: 16px; border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .btn:active { transform: scale(0.98); }
-        .btn:disabled { background: #444; cursor: not-allowed; }
-        .vendedor-tag { font-size: 12px; color: #10b981; margin-bottom: 15px; font-weight: bold; }
+        
+        /* Botones */
+        .btn { 
+            background: #0055ff; color: white; border: none; padding: 16px; 
+            border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px;
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+        }
+        .btn:active { transform: scale(0.98); background: #0044cc; }
+        .btn:disabled { background: #444; opacity: 0.7; cursor: not-allowed; }
+        
+        .vendedor-info { color: #10b981; font-size: 13px; font-weight: bold; margin-bottom: 20px; display: block; }
+        .logout-link { color: #555; font-size: 12px; margin-top: 20px; cursor: pointer; text-decoration: underline; display: inline-block; }
     </style>
 </head>
 <body>
 
     <div id="p-login" class="page">
         <div class="card">
-            <img src="logo.png" class="logo" alt="Aiestrategias">
-            <p style="color: #888; margin-bottom: 20px;">Acceso Privado</p>
-            <input type="text" id="user" placeholder="Usuario">
-            <input type="password" id="pass" placeholder="Contraseña">
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <h3 style="margin-bottom: 20px; letter-spacing: 1px;">ACCESO PRIVADO</h3>
+            
+            <div class="field">
+                <label>Usuario</label>
+                <input type="text" id="user" placeholder="Tu usuario">
+            </div>
+            
+            <div class="field">
+                <label>Contraseña</label>
+                <input type="password" id="pass" placeholder="••••••••">
+            </div>
+            
             <button class="btn" id="btnLogin" onclick="login()">INGRESAR</button>
         </div>
     </div>
 
     <div id="p-form" class="page">
         <div class="card">
-            <div id="vendedor-nombre" class="vendedor-tag"></div>
-            <h2 style="margin: 0 0 20px 0; font-size: 20px;">Nuevo Referido</h2>
+            <span id="vendedor-nombre" class="vendedor-info"></span>
+            <h2 style="margin: 0 0 20px 0; font-size: 20px;">NUEVO REFERIDO</h2>
             
-            <label>Nombre del Cliente</label>
-            <input type="text" id="f-nom" placeholder="Ej: Juan Pérez">
+            <div class="field">
+                <label>Nombre del Cliente</label>
+                <input type="text" id="f-nom" placeholder="Ej: Juan Pérez">
+            </div>
             
-            <label>Teléfono</label>
-            <input type="tel" id="f-tel" placeholder="Ej: 3512345678">
+            <div class="field">
+                <label>Teléfono</label>
+                <input type="tel" id="f-tel" placeholder="Ej: 3512345678">
+            </div>
             
-            <label>Barrio / Localidad</label>
-            <input type="text" id="f-bar" placeholder="Ej: Centro">
+            <div class="field">
+                <label>Barrio / Localidad</label>
+                <input type="text" id="f-bar" placeholder="Ej: Nueva Córdoba">
+            </div>
             
-            <label>Observaciones</label>
-            <textarea id="f-obs" rows="3" placeholder="Plan solicitado..."></textarea>
-            
+            <div class="field">
+                <label>Observaciones</label>
+                <textarea id="f-obs" rows="3" placeholder="Detalles de la venta..."></textarea>
+            </div>
+
             <button class="btn" id="btnEnviar" onclick="enviar()">GUARDAR EN PLANILLA</button>
-            <p onclick="logout()" style="margin-top: 20px; font-size: 12px; color: #555; cursor: pointer;">Cerrar Sesión</p>
+            
+            <span class="logout-link" onclick="logout()">Cerrar Sesión</span>
         </div>
     </div>
 
     <script>
-        // URL de tu script de Google Apps Script
+        // URL de tu Google Apps Script (Versión con Login)
         const URL_API = "https://script.google.com/macros/s/AKfycbx2JGutCO42COjzUXZ_CW5Q2KlQ44Tb0w0k4L5bUit2N5I0GuD2Qu49HcJ8OL1oASKa0Q/exec"; 
 
-        // Al iniciar la web, revisamos si ya hay una sesión guardada
+        // Al cargar la página, verificamos sesión
         window.onload = function() {
-            const v_guardado = localStorage.getItem("vendedor_nombre");
+            const v_guardado = localStorage.getItem("vendedor_aiestrategias");
             if (v_guardado) {
                 iniciarApp(v_guardado);
             } else {
-                document.getElementById('p-login').classList.add('show');
+                showPage('p-login');
             }
         };
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+            document.getElementById(id).classList.add('show');
+        }
 
         async function login() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
             const btn = document.getElementById('btnLogin');
 
-            if (!u || !p) return alert("Completa todos los campos");
+            if (!u || !p) return alert("Por favor, completa todos los campos");
 
             btn.disabled = true;
             btn.innerText = "Verificando...";
@@ -87,7 +149,73 @@
                 const res = await response.json();
 
                 if (res.res === "ok") {
-                    localStorage.setItem("vendedor_nombre", res.nombre);
+                    localStorage.setItem("vendedor_aiestrategias", res.nombre);
                     iniciarApp(res.nombre);
                 } else {
-                    alert("Usuario o
+                    alert("Usuario o contraseña incorrectos");
+                }
+            } catch (e) {
+                alert("Error de conexión. Verifica que el script de Google esté publicado como 'Cualquiera'.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "INGRESAR";
+            }
+        }
+
+        function iniciarApp(nombre) {
+            document.getElementById('vendedor-nombre').innerText = "👤 Vendedor: " + nombre;
+            showPage('p-form');
+        }
+
+        async function enviar() {
+            const btn = document.getElementById('btnEnviar');
+            const nom = document.getElementById('f-nom').value;
+            const tel = document.getElementById('f-tel').value;
+
+            if (!nom || !tel) return alert("Faltan datos obligatorios (Nombre y Teléfono)");
+
+            const payload = {
+                accion: "guardar",
+                vendedor: localStorage.getItem("vendedor_aiestrategias"),
+                nombre: nom,
+                telefono: tel,
+                barrio: document.getElementById('f-bar').value,
+                observaciones: document.getElementById('f-obs').value
+            };
+
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+
+            try {
+                // Enviamos los datos
+                await fetch(URL_API, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify(payload) 
+                });
+                
+                alert("✅ ¡Referido guardado con éxito!");
+                
+                // Limpiar campos
+                document.getElementById('f-nom').value = "";
+                document.getElementById('f-tel').value = "";
+                document.getElementById('f-bar').value = "";
+                document.getElementById('f-obs').value = "";
+                
+            } catch (e) {
+                alert("Error al guardar en la planilla.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "GUARDAR EN PLANILLA";
+            }
+        }
+
+        function logout() {
+            if(confirm("¿Seguro que quieres cerrar sesión?")) {
+                localStorage.removeItem("vendedor_aiestrategias");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
