@@ -2,220 +2,141 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aiestrategias - Sistema Privado</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="icon" href="logo.png">
-    <meta name="theme-color" content="#0055ff">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aiestrategias | DirecTV</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800;900&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background: #0f1117; 
-            color: white; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            display: flex;
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh;
-        }
-        
-        .page { display: none; width: 100%; max-width: 360px; padding: 20px; box-sizing: border-box; }
-        .show { display: block !important; }
-        
-        .card { 
-            background: #1a1d27; 
-            padding: 30px; 
-            border-radius: 25px; 
-            border: 1px solid #333; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-        
-        .logo-img { width: 100%; max-width: 180px; margin-bottom: 20px; }
-        
-        /* Inputs */
-        .field { text-align: left; margin-bottom: 15px; }
-        label { font-size: 11px; color: #0055ff; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px; letter-spacing: 1px; }
-        input, textarea { 
-            width: 100%; background: #0f1117; border: 1px solid #333; 
-            border-radius: 12px; padding: 14px; color: white; box-sizing: border-box;
-            font-size: 16px; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: #0055ff; }
-        
-        /* Botones */
-        .btn { 
-            background: #0055ff; color: white; border: none; padding: 16px; 
-            border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px;
-            cursor: pointer; margin-top: 10px; transition: 0.3s;
-        }
-        .btn:active { transform: scale(0.98); background: #0044cc; }
-        .btn:disabled { background: #444; opacity: 0.7; cursor: not-allowed; }
-        
-        .vendedor-info { color: #10b981; font-size: 13px; font-weight: bold; margin-bottom: 20px; display: block; }
-        .logout-link { color: #555; font-size: 12px; margin-top: 20px; cursor: pointer; text-decoration: underline; display: inline-block; }
+        /* Reutilizamos los estilos Pro que ya tenías */
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:#0f1117;color:#e8eaf0;font-family:'DM Sans',sans-serif;min-height:100vh}
+        .page{display:none;min-height:100vh;padding:16px 16px 64px}.page.show{display:block}
+        .vcenter{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px}
+        .card{background:#1a1d27;border-radius:16px;border:1px solid rgba(255,255,255,.07);padding:20px}
+        .inp{width:100%;background:#0f1117;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;color:#e8eaf0;font-size:14px;margin-bottom:10px}
+        .btn{display:block;width:100%;background:#0055ff;color:#fff;border:none;border-radius:10px;padding:13px;font-weight:700;cursor:pointer;text-align:center}
+        .btn.purple{background:#8b5cf6}.btn.green{background:#10b981}.btn.outline-red{background:transparent;color:#ef4444;border:1px solid #ef4444}
+        .hl{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase}
+        .blue{color:#0055ff}.muted{color:rgba(255,255,255,.4);font-size:12px}
+        .sg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
+        .sc{background:#1a1d27;padding:15px;border-radius:14px;text-align:center;border:1px solid rgba(255,255,255,.07)}
+        .sv{font-size:28px;font-weight:900;font-family:'Barlow Condensed'}
+        .tabs{display:flex;gap:5px;margin-bottom:15px}.tb{flex:1;padding:10px;border-radius:8px;border:none;background:#1a1d27;color:gray;cursor:pointer}
+        .tb.on{background:#0055ff;color:white}
     </style>
 </head>
 <body>
 
-    <div id="p-login" class="page">
-        <div class="card">
-            <img src="logo.png" alt="Logo" class="logo-img">
-            <h3 style="margin-bottom: 20px; letter-spacing: 1px;">ACCESO PRIVADO</h3>
-            
-            <div class="field">
-                <label>Usuario</label>
-                <input type="text" id="user" placeholder="Tu usuario">
-            </div>
-            
-            <div class="field">
-                <label>Contraseña</label>
-                <input type="password" id="pass" placeholder="••••••••">
-            </div>
-            
-            <button class="btn" id="btnLogin" onclick="login()">INGRESAR</button>
+<div id="p-home" class="page show">
+    <div class="vcenter">
+        <div style="width:100%;max-width:350px;text-align:center">
+            <h1 class="hl" style="font-size:40px;margin-bottom:20px">DIREC<span class="blue">TV</span></h1>
+            <button class="btn" style="margin-bottom:10px" onclick="goAuth('ref')">👤 REFERENCIADOR</button>
+            <button class="btn green" style="margin-bottom:10px" onclick="goAuth('vend')">🧑‍💼 VENDEDOR</button>
+            <button class="btn purple" onclick="goAuth('sup')">👑 SUPERVISOR</button>
         </div>
     </div>
+</div>
 
-    <div id="p-form" class="page">
-        <div class="card">
-            <span id="vendedor-nombre" class="vendedor-info"></span>
-            <h2 style="margin: 0 0 20px 0; font-size: 20px;">NUEVO REFERIDO</h2>
-            
-            <div class="field">
-                <label>Nombre del Cliente</label>
-                <input type="text" id="f-nom" placeholder="Ej: Juan Pérez">
-            </div>
-            
-            <div class="field">
-                <label>Teléfono</label>
-                <input type="tel" id="f-tel" placeholder="Ej: 3512345678">
-            </div>
-            
-            <div class="field">
-                <label>Barrio / Localidad</label>
-                <input type="text" id="f-bar" placeholder="Ej: Nueva Córdoba">
-            </div>
-            
-            <div class="field">
-                <label>Observaciones</label>
-                <textarea id="f-obs" rows="3" placeholder="Detalles de la venta..."></textarea>
-            </div>
-
-            <button class="btn" id="btnEnviar" onclick="enviar()">GUARDAR EN PLANILLA</button>
-            
-            <span class="logout-link" onclick="logout()">Cerrar Sesión</span>
+<div id="p-auth" class="page">
+    <div class="vcenter">
+        <div class="card" style="width:100%;max-width:350px">
+            <h2 class="hl" id="a-title" style="margin-bottom:15px">LOGIN</h2>
+            <input class="inp" id="a-email" placeholder="Usuario / Email">
+            <input class="inp" type="password" id="a-pass" placeholder="Contraseña">
+            <button class="btn" onclick="doAuth()">INGRESAR</button>
+            <p class="muted" style="margin-top:15px;cursor:pointer" onclick="show('p-home')">← Volver</p>
         </div>
     </div>
+</div>
 
-    <script>
-        // URL de tu Google Apps Script (Versión con Login)
-        const URL_API = "https://script.google.com/macros/s/AKfycbx2JGutCO42COjzUXZ_CW5Q2KlQ44Tb0w0k4L5bUit2N5I0GuD2Qu49HcJ8OL1oASKa0Q/exec"; 
+<div id="p-sup" class="page">
+    <div class="hl" style="font-size:24px;margin-bottom:10px">PANEL <span style="color:#8b5cf6">SUPERVISOR</span></div>
+    <div class="sg">
+        <div class="sc"><div class="sv blue" id="s-total">0</div><div class="muted">REFERIDOS</div></div>
+        <div class="sc"><div class="sv" style="color:#10b981" id="s-ventas">0</div><div class="muted">VENTAS</div></div>
+    </div>
+    <div class="card">
+        <h3 class="hl" style="font-size:18px;margin-bottom:10px">Lista de Control</h3>
+        <div id="s-list" style="font-size:13px">Cargando datos...</div>
+    </div>
+    <button class="btn outline-red" style="margin-top:20px" onclick="logout()">CERRAR SESIÓN</button>
+</div>
 
-        // Al cargar la página, verificamos sesión
-        window.onload = function() {
-            const v_guardado = localStorage.getItem("vendedor_aiestrategias");
-            if (v_guardado) {
-                iniciarApp(v_guardado);
-            } else {
-                showPage('p-login');
-            }
-        };
+<script>
+    // TUS CREDENCIALES CONFIGURADAS
+    const SURL = 'https://wxwmvnybdhlbbtkvlzuc.supabase.co'; 
+    const SKEY = 'sb_publishable_FZQN55Ytuy3sWkoL-fCx9A_JE191GqS';
+    
+    let db, CU = null, refs = [];
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-            document.getElementById(id).classList.add('show');
+    // Inicializar Supabase
+    window.onload = async () => {
+        db = supabase.createClient(SURL, SKEY);
+        const saved = localStorage.getItem('dtv_cu');
+        if(saved) {
+            CU = JSON.parse(saved);
+            await loadData();
+            show(CU.role === 'sup' ? 'p-sup' : 'p-home');
+        }
+    };
+
+    function show(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+        document.getElementById(id).classList.add('show');
+    }
+
+    function goAuth(role) {
+        CU = { role: role };
+        document.getElementById('a-title').innerText = "LOGIN " + role.toUpperCase();
+        show('p-auth');
+    }
+
+    async function doAuth() {
+        const user = document.getElementById('a-email').value;
+        const pass = document.getElementById('a-pass').value;
+
+        if(CU.role === 'sup') {
+            if(user === 'Multitex' && pass === 'ferfer2fer') {
+                CU = { name: 'Supervisor', role: 'sup' };
+                localStorage.setItem('dtv_cu', JSON.stringify(CU));
+                await loadData();
+                show('p-sup');
+            } else { alert("Clave incorrecta"); }
+        }
+        // Aquí puedes agregar la lógica para Vendedores y Referidores
+    }
+
+    async function loadData() {
+        const { data, error } = await db.from('dtv_referidos').select('*');
+        if(!error) {
+            refs = data;
+            renderSup();
+        }
+    }
+
+    function renderSup() {
+        document.getElementById('s-total').innerText = refs.length;
+        document.getElementById('s-ventas').innerText = refs.filter(r => r.estado === 'concretada').length;
+        
+        const list = document.getElementById('s-list');
+        if(refs.length === 0) {
+            list.innerHTML = "No hay referidos cargados aún.";
+            return;
         }
 
-        async function login() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            const btn = document.getElementById('btnLogin');
+        list.innerHTML = refs.map(r => `
+            <div style="padding:10px; border-bottom:1px solid #333; display:flex; justify-content:space-between">
+                <span><b>${r.nombre}</b><br><small>${r.vendedor_id || 'Sin asignar'}</small></span>
+                <span style="color:${r.estado === 'concretada' ? '#10b981' : '#f59e0b'}">${r.estado.toUpperCase()}</span>
+            </div>
+        `).join('');
+    }
 
-            if (!u || !p) return alert("Por favor, completa todos los campos");
-
-            btn.disabled = true;
-            btn.innerText = "Verificando...";
-
-            try {
-                const response = await fetch(URL_API, {
-                    method: 'POST',
-                    body: JSON.stringify({ accion: "login", usuario: u, password: p })
-                });
-                
-                const res = await response.json();
-
-                if (res.res === "ok") {
-                    localStorage.setItem("vendedor_aiestrategias", res.nombre);
-                    iniciarApp(res.nombre);
-                } else {
-                    alert("Usuario o contraseña incorrectos");
-                }
-            } catch (e) {
-                alert("Error de conexión. Verifica que el script de Google esté publicado como 'Cualquiera'.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "INGRESAR";
-            }
-        }
-
-        function iniciarApp(nombre) {
-            document.getElementById('vendedor-nombre').innerText = "👤 Vendedor: " + nombre;
-            showPage('p-form');
-        }
-
-        async function enviar() {
-            const btn = document.getElementById('btnEnviar');
-            const nom = document.getElementById('f-nom').value;
-            const tel = document.getElementById('f-tel').value;
-
-            if (!nom || !tel) return alert("Faltan datos obligatorios (Nombre y Teléfono)");
-
-            const payload = {
-                accion: "guardar",
-                vendedor: localStorage.getItem("vendedor_aiestrategias"),
-                nombre: nom,
-                telefono: tel,
-                barrio: document.getElementById('f-bar').value,
-                observaciones: document.getElementById('f-obs').value
-            };
-
-            btn.disabled = true;
-            btn.innerText = "Enviando...";
-
-            try {
-                // Enviamos los datos
-                await fetch(URL_API, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    body: JSON.stringify(payload) 
-                });
-                
-                alert("✅ ¡Referido guardado con éxito!");
-                
-                // Limpiar campos
-                document.getElementById('f-nom').value = "";
-                document.getElementById('f-tel').value = "";
-                document.getElementById('f-bar').value = "";
-                document.getElementById('f-obs').value = "";
-                
-            } catch (e) {
-                alert("Error al guardar en la planilla.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "GUARDAR EN PLANILLA";
-            }
-        }
-
-        function logout() {
-            if(confirm("¿Seguro que quieres cerrar sesión?")) {
-                localStorage.removeItem("vendedor_aiestrategias");
-                location.reload();
-            }
-        }
-    </script>
+    function logout() {
+        localStorage.clear();
+        location.reload();
+    }
+</script>
 </body>
 </html>
