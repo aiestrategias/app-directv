@@ -32,7 +32,6 @@
         .btn-green { background: var(--green); }
         .btn-purple { background: var(--purple); }
         .btn-ghost { background: transparent; border: 1px solid #444; color: #888; }
-        .btn:active { transform: scale(0.98); opacity: 0.8; }
         
         .sg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .sc { background: var(--card); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #333; }
@@ -41,9 +40,7 @@
 
         .item-ref { padding: 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
         .muted { color: #666; font-size: 12px; }
-        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
-        .bg-pend { background: rgba(245,158,11,0.1); color: #f59e0b; }
-        .bg-ok { background: rgba(16,185,129,0.1); color: #10b981; }
+        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 700; background: rgba(245,158,11,0.1); color: #f59e0b; }
     </style>
 </head>
 <body>
@@ -53,11 +50,10 @@
             <div style="width:100%; max-width:360px; text-align:center;">
                 <h1 class="hl" style="font-size:45px; margin-bottom:30px;">DIREC<span class="blue">TV</span></h1>
                 <div style="display:grid; gap:12px;">
-                    <button class="btn btn-blue" onclick="prepareLogin('ref')">👤 Referenciador</button>
-                    <button class="btn btn-green" onclick="prepareLogin('vend')">🧑‍💼 Vendedor</button>
-                    <button class="btn btn-purple" onclick="prepareLogin('sup')">👑 Supervisor</button>
+                    <button class="btn btn-green" onclick="prepareLogin('vend')">🧑‍💼 Acceso Vendedor</button>
+                    <button class="btn btn-purple" onclick="prepareLogin('sup')">👑 Acceso Supervisor</button>
                 </div>
-                <p class="muted" style="margin-top:40px;">v5.0 · Aiestrategias</p>
+                <p class="muted" style="margin-top:40px;">Sistema de Referidos v5.1</p>
             </div>
         </div>
     </div>
@@ -66,5 +62,142 @@
         <div class="vcenter">
             <div class="card" style="width:100%; max-width:360px;">
                 <h2 class="hl" id="a-title" style="margin-bottom:20px; font-size:24px;">ACCESO</h2>
-                <input class="inp" id="a-user" placeholder="Usuario / Email">
-                <input class="inp" type="password" id="a-pass
+                <input class="inp" id="a-user" placeholder="Usuario">
+                <input class="inp" type="password" id="a-pass" placeholder="Contraseña">
+                <button class="btn btn-blue" id="btn-login" onclick="doAuth()">Entrar</button>
+                <button class="btn btn-ghost" style="margin-top:10px;" onclick="show('p-home')">Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="p-vend" class="page">
+        <div class="hl" style="font-size:24px; margin-bottom:15px;"><span class="green">Carga</span> de Referido</div>
+        <div class="card">
+            <input class="inp" id="v-nom" placeholder="Nombre del cliente">
+            <input class="inp" id="v-tel" placeholder="WhatsApp (Ej: 11223344)">
+            <input class="inp" id="v-bar" placeholder="Barrio / Localidad">
+            <textarea class="inp" id="v-obs" rows="3" placeholder="Observaciones"></textarea>
+            <button class="btn btn-green" id="btn-save" onclick="saveReferido()">Guardar Cliente</button>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:20px;" onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <div id="p-sup" class="page">
+        <div class="hl" style="font-size:24px; margin-bottom:15px;"><span class="purple">Panel</span> Supervisor</div>
+        <div class="sg">
+            <div class="sc"><div class="sv blue" id="s-total">0</div><div class="sl">Referidos</div></div>
+            <div class="sc"><div class="sv green" id="s-ventas">0</div><div class="sl">Ventas</div></div>
+        </div>
+        <div class="card" style="padding:10px;">
+            <h3 class="hl" style="font-size:14px; padding:10px; border-bottom:1px solid #333;">Últimos Movimientos</h3>
+            <div id="s-list">Cargando datos...</div>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:20px;" onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DE CONEXIÓN
+        const SURL = 'https://wxwmvnybdhlbbtkvlzuc.supabase.co';
+        const SKEY = 'sb_publishable_FZQN55Ytuy3sWkoL-fCx9A_JE191GqS';
+        
+        const db = supabase.createClient(SURL, SKEY);
+        let CU = null; 
+
+        function show(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+            document.getElementById(id).classList.add('show');
+        }
+
+        function prepareLogin(role) {
+            CU = { role: role };
+            document.getElementById('a-title').innerText = "LOGIN " + role.toUpperCase();
+            show('p-auth');
+        }
+
+        async function doAuth() {
+            const user = document.getElementById('a-user').value.trim();
+            const pass = document.getElementById('a-pass').value;
+            const btn = document.getElementById('btn-login');
+
+            if(!user || !pass) return alert("Completá los campos");
+            btn.disabled = true; btn.innerText = "Verificando...";
+
+            if(CU.role === 'sup') {
+                if(user === 'Multitex' && pass === 'ferfer2fer') {
+                    successLogin({ name: 'Admin', role: 'sup' });
+                } else {
+                    alert("Clave incorrecta");
+                    btn.disabled = false; btn.innerText = "Entrar";
+                }
+            } else {
+                try {
+                    const { data, error } = await db.from('dtv_vendedores')
+                        .select('*').eq('usuario', user).eq('pass', pass).single();
+                    if(error || !data) alert("Usuario o Clave de Vendedor no coinciden");
+                    else successLogin({ name: data.nombre, role: 'vend' });
+                } catch(e) { alert("Error de conexión"); }
+                btn.disabled = false; btn.innerText = "Entrar";
+            }
+        }
+
+        function successLogin(userObj) {
+            CU = userObj;
+            localStorage.setItem('dtv_cu', JSON.stringify(CU));
+            if(CU.role === 'sup') { loadSupData(); show('p-sup'); }
+            else { show('p-vend'); }
+        }
+
+        async function saveReferido() {
+            const nom = document.getElementById('v-nom').value;
+            const tel = document.getElementById('v-tel').value;
+            const btn = document.getElementById('btn-save');
+            if(!nom || !tel) return alert("Nombre y Teléfono obligatorios");
+            
+            btn.disabled = true; btn.innerText = "Guardando...";
+            const { error } = await db.from('dtv_referidos').insert([{
+                nombre: nom,
+                telefono: tel,
+                barrio: document.getElementById('v-bar').value,
+                observaciones: document.getElementById('v-obs').value,
+                vendedor_id: CU.name,
+                estado: 'pendiente'
+            }]);
+
+            if(error) alert("Error: " + error.message);
+            else {
+                alert("✅ Guardado con éxito");
+                document.querySelectorAll('.inp').forEach(i => i.value = "");
+            }
+            btn.disabled = false; btn.innerText = "Guardar Cliente";
+        }
+
+        async function loadSupData() {
+            const { data } = await db.from('dtv_referidos').select('*').order('created_at', { ascending: false });
+            if(data) {
+                document.getElementById('s-total').innerText = data.length;
+                document.getElementById('s-ventas').innerText = data.filter(r => r.estado === 'concretada').length;
+                document.getElementById('s-list').innerHTML = data.map(r => `
+                    <div class="item-ref">
+                        <div>
+                            <div style="font-weight:700">${r.nombre}</div>
+                            <div class="muted">Vendedor: ${r.vendedor_id || '---'}</div>
+                        </div>
+                        <span class="badge">${r.estado}</span>
+                    </div>
+                `).join('') || '<p style="padding:20px;color:gray">No hay datos</p>';
+            }
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('dtv_cu');
+            if(saved) {
+                CU = JSON.parse(saved);
+                if(CU.role === 'sup') { loadSupData(); show('p-sup'); }
+                else { show('p-vend'); }
+            }
+        };
+    </script>
+</body>
+</html>
