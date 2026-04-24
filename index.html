@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referidos Aiestrategias</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" href="logo.png">
+    <meta name="theme-color" content="#0055ff">
+
+    <style>
+        body { 
+            background: #0f1117; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            text-align: center; 
+        }
+        .card { 
+            background: #1a1d27; 
+            padding: 30px; 
+            border-radius: 25px; 
+            border: 1px solid #333; 
+            width: 85%; 
+            max-width: 350px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .logo-img {
+            width: 100%;
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+        .btn { 
+            background: #0055ff; 
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 12px; 
+            width: 100%; 
+            font-weight: bold; 
+            font-size: 16px;
+            cursor: pointer; 
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .btn:active {
+            transform: scale(0.98);
+            background: #0044cc;
+        }
+        p { color: #888; font-size: 14px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="logo.png" alt="Logo" class="logo-img">
+        <p>Sistema de Referidos</p>
+        <p style="font-weight: bold; color: #aaa;">Comercializadora Aiestrategias</p>
+        
+        <button class="btn" onclick="window.location.href='#'">INGRESAR</button>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
